@@ -3,7 +3,6 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
-import nodemailer from 'nodemailer';
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -41,16 +40,36 @@ const rsvpLimiter = rateLimit({
   message: { message: "Trop de tentatives. Merci de réessayer dans quelques minutes." },
 });
 
-// --- Mail transport -----------------------------------------------------
-// Uses Gmail SMTP with an "App Password" (not your regular Gmail password).
-// See backend/README.md for setup instructions.
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_APP_PASSWORD,
-  },
-});
+// --- Mail sending (Resend HTTP API) --------------------------------------
+// Uses Resend (https://resend.com) over plain HTTPS instead of SMTP.
+// Many free hosts (including Render's free tier) block outbound SMTP ports
+// (25/465/587) to prevent spam abuse, which breaks Gmail-SMTP-based mailers.
+// Resend avoids that entirely since it's a normal HTTPS API call.
+// See backend/README.md (or the main README) for setup instructions.
+const RESEND_API_KEY = process.env.RESEND_API_KEY;
+const RESEND_FROM = process.env.RESEND_FROM || 'RSVP L&H <onboarding@resend.dev>';
+
+async function sendRsvpEmail({ subject, text, html }) {
+  const response = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${RESEND_API_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      from: RESEND_FROM,
+      to: RECIPIENT_EMAIL,
+      subject,
+      text,
+      html,
+    }),
+  });
+
+  if (!response.ok) {
+    const errorBody = await response.text().catch(() => '');
+    throw new Error(`Resend API error (${response.status}): ${errorBody}`);
+  }
+}
 
 // --- Helpers -------------------------------------------------------------
 function escapeHtml(str = '') {
@@ -183,10 +202,7 @@ Invités: ${guests}
 ${pagneLabel ? `Souhaite le pagne: ${pagneLabel}\n` : ''}${message ? `Message: ${message}` : ''}`;
 
   try {
-    await transporter.sendMail({
-      from: `"Site L&H - RSVP" <${process.env.GMAIL_USER}>`,
-      to: RECIPIENT_EMAIL,
-      replyTo: process.env.GMAIL_USER,
+    await sendRsvpEmail({
       subject: `Nouvelle confirmation RSVP — ${fullName}`,
       text,
       html,
@@ -208,9 +224,9 @@ app.use((_req, res) => {
 
 app.listen(PORT, () => {
   console.log(`RSVP backend running on http://localhost:${PORT}`);
-  if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) {
+  if (!RESEND_API_KEY) {
     console.warn(
-      '⚠️  GMAIL_USER / GMAIL_APP_PASSWORD are not set. Copy backend/.env.example to backend/.env and fill them in.'
+      '⚠️  RESEND_API_KEY is not set. Copy backend/.env.example to backend/.env and fill it in.'
     );
   }
 });
