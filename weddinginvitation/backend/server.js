@@ -6,7 +6,7 @@ import rateLimit from 'express-rate-limit';
 
 const app = express();
 const PORT = process.env.PORT || 4000;
-const RECIPIENT_EMAIL = process.env.RSVP_RECIPIENT_EMAIL || 'princefootball020@gmail.com';
+const RECIPIENT_EMAIL = process.env.RSVP_RECIPIENT_EMAIL || 'jerryj36p@gmail.com';
 
 // FRONTEND_ORIGIN can be a single URL or a comma-separated list
 // (e.g. "https://your-site.vercel.app,https://www.your-site.com").
@@ -40,34 +40,38 @@ const rsvpLimiter = rateLimit({
   message: { message: "Trop de tentatives. Merci de réessayer dans quelques minutes." },
 });
 
-// --- Mail sending (Resend HTTP API) --------------------------------------
-// Uses Resend (https://resend.com) over plain HTTPS instead of SMTP.
+// --- Mail sending (Brevo HTTP API) --------------------------------------
+// Uses Brevo (https://brevo.com) over plain HTTPS instead of SMTP.
 // Many free hosts (including Render's free tier) block outbound SMTP ports
 // (25/465/587) to prevent spam abuse, which breaks Gmail-SMTP-based mailers.
-// Resend avoids that entirely since it's a normal HTTPS API call.
-// See backend/README.md (or the main README) for setup instructions.
-const RESEND_API_KEY = process.env.RESEND_API_KEY;
-const RESEND_FROM = process.env.RESEND_FROM || 'RSVP L&H <onboarding@resend.dev>';
+// Brevo avoids that entirely since it's a normal HTTPS API call, and unlike
+// some competitors, its free "single sender" verification lets you send to
+// ANY recipient (not just the account's own address) — see backend/README.md
+// (or the main README) for setup instructions.
+const BREVO_API_KEY = process.env.BREVO_API_KEY;
+const BREVO_SENDER_EMAIL = process.env.BREVO_SENDER_EMAIL;
+const BREVO_SENDER_NAME = process.env.BREVO_SENDER_NAME || 'RSVP L&H';
 
 async function sendRsvpEmail({ subject, text, html }) {
-  const response = await fetch('https://api.resend.com/emails', {
+  const response = await fetch('https://api.brevo.com/v3/smtp/email', {
     method: 'POST',
     headers: {
-      Authorization: `Bearer ${RESEND_API_KEY}`,
+      'api-key': BREVO_API_KEY,
       'Content-Type': 'application/json',
+      Accept: 'application/json',
     },
     body: JSON.stringify({
-      from: RESEND_FROM,
-      to: RECIPIENT_EMAIL,
+      sender: { name: BREVO_SENDER_NAME, email: BREVO_SENDER_EMAIL },
+      to: [{ email: RECIPIENT_EMAIL }],
       subject,
-      text,
-      html,
+      textContent: text,
+      htmlContent: html,
     }),
   });
 
   if (!response.ok) {
     const errorBody = await response.text().catch(() => '');
-    throw new Error(`Resend API error (${response.status}): ${errorBody}`);
+    throw new Error(`Brevo API error (${response.status}): ${errorBody}`);
   }
 }
 
@@ -224,9 +228,9 @@ app.use((_req, res) => {
 
 app.listen(PORT, () => {
   console.log(`RSVP backend running on http://localhost:${PORT}`);
-  if (!RESEND_API_KEY) {
+  if (!BREVO_API_KEY || !BREVO_SENDER_EMAIL) {
     console.warn(
-      '⚠️  RESEND_API_KEY is not set. Copy backend/.env.example to backend/.env and fill it in.'
+      '⚠️  BREVO_API_KEY / BREVO_SENDER_EMAIL are not set. Copy backend/.env.example to backend/.env and fill them in.'
     );
   }
 });
