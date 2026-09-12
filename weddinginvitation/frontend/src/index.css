@@ -1,0 +1,96 @@
+@import "tailwindcss";
+
+@theme {
+  /* Color palette — kept faithful to the original Figma theme */
+  --color-cream: #fdf6ec;
+  --color-cream-deep: #f7e9d5;
+  --color-blush: #f3ddc4;
+  --color-espresso: #1b120c;
+  --color-espresso-soft: #2a1c12;
+  --color-cocoa: #4a3320;
+  --color-ink: #2e2013;
+  --color-gold: #c9982f;
+  --color-gold-light: #e8c874;
+  --color-gold-deep: #a8761f;
+  --color-sage: #8a9a6e;
+
+  --font-display: "Playfair Display", serif;
+  --font-script: "Alex Brush", cursive;
+  --font-body: "Cormorant Garamond", serif;
+  --font-label: "Jost", sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background-color: var(--color-gold-light);
+  color: var(--color-espresso);
+}
+
+.font-script { font-family: var(--font-script); }
+.font-display { font-family: var(--font-display); }
+.font-label { font-family: var(--font-label); }
+
+.gold-gradient-text {
+  background: linear-gradient(115deg, #a8761f 0%, #e8c874 35%, #c9982f 65%, #8a5f16 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.gold-gradient-btn {
+  background: linear-gradient(100deg, #a8761f 0%, #e8c874 45%, #c9982f 75%, #a8761f 100%);
+}
+
+.divider-ornament {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.divider-ornament::before,
+.divider-ornament::after {
+  content: "";
+  height: 1px;
+  width: 2.5rem;
+  background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-14px) rotate(4deg); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.8s ease-out both;
+}
