@@ -24,10 +24,10 @@ export const events = [
     title: 'Mariage Traditionnel',
     venue: 'Fougerolle',
     city: 'Yaoundé',
-    time: '10h00 – 20h00',
+    time: '12H00',
     dress: 'Tenue traditionnelle',
     summaryShort: 'Immersion dans nos traditions, danses culturelles et célébration de nos racines africaines.',
-    summaryLong: 'Danses, chants et couleurs africaines dans la joie et la convivialité familiale.',
+    summaryLong: 'Danses, chants et couleurs africaines dans la joie et la convivialité familiale. Billet physique exigé à l’entrée',
     mapsQuery: 'Fougerolle, Yaoundé, Cameroun',
   },
   {
@@ -39,11 +39,11 @@ export const events = [
     title: 'Mariage Religieux',
     venue: 'Awae',
     city: 'Yaoundé',
-    time: '09h00 – 18h00',
-    dress: 'Tenue de gala / Wax',
+    time: 'A partir de 13H00',
+    dress: 'Theme: Dusty Rose Champagne',
     summaryShort: 'Union sacrée sous le regard de Dieu, réception somptueuse et soirée inoubliable.',
-    summaryLong: 'Cérémonie bénie, puis réception somptueuse et soirée de fête inoubliable.',
-    mapsQuery: 'Awae, Yaoundé, Cameroun',
+    summaryLong: 'Cérémonie bénie, puis réception somptueuse et soirée de fête inoubliable. Billet physique exigé à l’entrée',
+    mapsQuery: 'Hotel Prodige, Awae, Yaoundé, Cameroun',
   },
 ];
 
@@ -65,17 +65,17 @@ export const story = [
   {
     title: 'La Première Rencontre',
     text: 'Deux regards qui se croisent, une complicité immédiate. Le destin avait tout prévu.',
-    image: '/images/gallery/couple-new-10.jpeg',
+    image: '/images/gallery/raconte.jpeg',
   },
   {
     title: 'Les Premiers Pas',
     text: 'Voyages, rires et souvenirs qui ont scellé une promesse silencieuse.',
-    image: '/images/gallery/couple-new-11.jpeg',
+    image: '/images/gallery/premierpas.jpeg',
   },
   {
     title: "La Demande",
     text: "Un genou à terre, un cœur qui bat plus fort, et un oui qui a tout changé.",
-    image: '/images/gallery/couple-new-12.jpeg',
+    image: '/images/gallery/demande.jpeg',
   },
   {
     title: 'Le Grand Jour',
@@ -87,14 +87,14 @@ export const story = [
 // Explicit list so specific photos can be added/removed without renumbering everything.
 export const galleryImages = [
 
-  '/images/gallery/couple-new-01.jpg',
-  '/images/gallery/couple-new-02.jpg',
-  '/images/gallery/couple-new-03.jpg',
-  '/images/gallery/couple-new-04.jpg',
-  '/images/gallery/couple-new-05.jpg',
-  '/images/gallery/couple-new-06.jpg',
-  '/images/gallery/couple-new-07.jpg',
-  '/images/gallery/couple-new-08.jpg',
-  '/images/gallery/couple-new-09.jpg',
-  '/images/gallery/couple-new-13.jpeg',
+  '/images/gallery/couple-01.jpg',
+  '/images/gallery/premierpas.jpeg',
+  '/images/gallery/couple-10.jpg',
+  '/images/gallery/couple-21.jpg',
+  '/images/gallery/1.jpeg',
+  '/images/gallery/2.jpg',
+  '/images/gallery/3.jpg',
+  '/images/gallery/4.jpg',
+  '/images/gallery/5.jpg',
+  '/images/gallery/6.jpeg',
 ];
