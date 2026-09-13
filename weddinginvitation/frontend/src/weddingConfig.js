@@ -92,9 +92,9 @@ export const galleryImages = [
   '/images/gallery/couple-10.jpg',
   '/images/gallery/couple-21.jpg',
   '/images/gallery/1.jpeg',
-  '/images/gallery/2.jpg',
-  '/images/gallery/3.jpg',
-  '/images/gallery/4.jpg',
-  '/images/gallery/5.jpg',
+  '/images/gallery/2.jpeg',
+  '/images/gallery/3.jpeg',
+  '/images/gallery/4.jpeg',
+  '/images/gallery/5.jpeg',
   '/images/gallery/6.jpeg',
 ];
