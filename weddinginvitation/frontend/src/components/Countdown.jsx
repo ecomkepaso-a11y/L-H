@@ -4,6 +4,7 @@ import { couple } from '../weddingConfig';
 function getTimeLeft(target) {
   const diff = Math.max(0, new Date(target).getTime() - Date.now());
   const seconds = Math.floor(diff / 1000);
+
   return {
     days: Math.floor(seconds / 86400),
     hours: Math.floor((seconds % 86400) / 3600),
@@ -20,44 +21,83 @@ const UNITS = [
 ];
 
 export default function Countdown() {
-  const [time, setTime] = useState(() => getTimeLeft(couple.countdownTarget));
+  const [time, setTime] = useState(() =>
+    getTimeLeft(couple.countdownTarget)
+  );
 
   useEffect(() => {
-    const id = setInterval(() => setTime(getTimeLeft(couple.countdownTarget)), 1000);
+    const id = setInterval(
+      () => setTime(getTimeLeft(couple.countdownTarget)),
+      1000
+    );
+
     return () => clearInterval(id);
   }, []);
 
   return (
-    <section className="relative overflow-hidden bg-espresso px-6 py-24 sm:px-10">
+    <section
+      className="relative overflow-hidden px-6 py-24 sm:px-10"
+      style={{ backgroundColor: '#DCA1A1' }}
+    >
+      {/* Decorative background glow */}
       <div
         className="pointer-events-none absolute inset-0 opacity-70"
         style={{
           background:
-            'radial-gradient(circle at 20% 20%, rgba(232,200,116,0.18), transparent 45%), radial-gradient(circle at 80% 70%, rgba(201,152,47,0.16), transparent 40%)',
+            'radial-gradient(circle at 20% 20%, rgba(255,255,255,0.22), transparent 45%), radial-gradient(circle at 80% 70%, rgba(168,118,31,0.12), transparent 40%)',
         }}
         aria-hidden="true"
       />
 
       <div className="relative mx-auto flex max-w-3xl flex-col items-center text-center">
-        <p className="font-label text-xs uppercase tracking-[0.3em] text-gold-light/80">Plus que...</p>
-        <h2 className="mt-3 font-display text-4xl text-cream sm:text-5xl">Compte à Rebours</h2>
-        <p className="mt-3 font-script text-3xl text-gold-light sm:text-4xl">{couple.dateRange.split('&')[0].trim()} Décembre 2026</p>
 
+        {/* Eyebrow */}
+        <p className="font-label text-xs uppercase tracking-[0.3em] text-espresso/70">
+          Plus que...
+        </p>
+
+        {/* Title */}
+        <h2 className="mt-3 font-display text-4xl text-espresso sm:text-5xl">
+          Compte à Rebours
+        </h2>
+
+        {/* Date */}
+        <p className="mt-3 font-script text-3xl text-espresso/80 sm:text-4xl">
+          {couple.dateRange.split('&')[0].trim()} Décembre 2026
+        </p>
+
+        {/* Countdown */}
         <div className="mt-14 grid w-full grid-cols-4 gap-3 sm:gap-6">
           {UNITS.map((unit) => (
             <div
               key={unit.key}
-              className="flex flex-col items-center rounded-2xl border border-gold/25 bg-gradient-to-b from-[#3a2a1a] to-[#241609] px-2 py-5 shadow-[0_15px_35px_-15px_rgba(0,0,0,0.6)] sm:py-7"
+              className="
+                flex
+                flex-col
+                items-center
+                rounded-2xl
+                border
+                border-white/30
+                bg-white/20
+                px-2
+                py-5
+                shadow-[0_15px_35px_-15px_rgba(60,40,10,0.25)]
+                backdrop-blur-sm
+
+                sm:py-7
+              "
             >
-              <span className="font-display text-3xl gold-gradient-text tabular-nums sm:text-5xl">
+              <span className="font-display text-3xl text-espresso tabular-nums sm:text-5xl">
                 {String(time[unit.key]).padStart(2, '0')}
               </span>
-              <span className="mt-2 font-label text-[10px] uppercase tracking-[0.2em] text-cream/70 sm:text-xs">
+
+              <span className="mt-2 font-label text-[10px] uppercase tracking-[0.2em] text-espresso/70 sm:text-xs">
                 {unit.label}
               </span>
             </div>
           ))}
         </div>
+
       </div>
     </section>
   );
