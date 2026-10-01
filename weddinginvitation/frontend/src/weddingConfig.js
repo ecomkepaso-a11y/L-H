@@ -27,7 +27,7 @@ export const events = [
     time: '12H00',
     dress: 'Tenue traditionnelle',
     summaryShort: 'Immersion dans nos traditions, danses culturelles et célébration de nos racines africaines.',
-    summaryLong: 'Danses, chants et couleurs africaines dans la joie et la convivialité familiale. Billet physique exigé à l’entrée',
+    summaryLong: 'Danses, chants et couleurs africaines dans la joie et la convivialité familiale.',
     mapsQuery: 'Fougerolle, Yaoundé, Cameroun',
   },
   {
