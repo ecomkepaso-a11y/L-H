@@ -19,13 +19,13 @@ const initialForm = {
   ceremonies: [],
   guests: 1,
   message: '',
-  wantsPagne: null,
+  wantsPagne: null, // 'oui' | 'non' | null — only relevant if traditional ceremony is selected
 };
 
 export default function RSVP() {
   const [step, setStep] = useState(1);
   const [form, setForm] = useState(initialForm);
-  const [status, setStatus] = useState('idle');
+  const [status, setStatus] = useState('idle'); // idle | loading | success | error
   const [errorMsg, setErrorMsg] = useState('');
   const [fieldErrors, setFieldErrors] = useState({});
 
@@ -45,6 +45,8 @@ export default function RSVP() {
       return {
         ...f,
         ceremonies: nowSelected,
+
+        // Reset the pagne choice if the traditional ceremony gets unchecked
         wantsPagne: nowSelected.includes('traditionnel')
           ? f.wantsPagne
           : null,
@@ -102,7 +104,9 @@ export default function RSVP() {
   }
 
   function goNext() {
-    if (validateStep1()) setStep(2);
+    if (validateStep1()) {
+      setStep(2);
+    }
   }
 
   function goBack() {
@@ -122,6 +126,7 @@ export default function RSVP() {
       setStatus('success');
     } catch (err) {
       setStatus('error');
+
       setErrorMsg(
         err?.response?.data?.message ||
           'Une erreur est survenue. Merci de réessayer dans un instant.'
@@ -129,22 +134,24 @@ export default function RSVP() {
     }
   }
 
-  {/* =========================================================
-      SUCCESS STATE
-      ========================================================= */}
+  /*
+   * ============================================================
+   * SUCCESS STATE
+   * ============================================================
+   */
 
   if (status === 'success') {
     return (
       <section
         id="rsvp"
-        className="relative overflow-hidden px-6 py-24 sm:px-10"
-        style={{ backgroundColor: '#DCA1A1' }}
+        className="relative overflow-hidden bg-gradient-to-b from-cream-deep to-blush px-6 py-24 sm:px-10"
       >
+        {/* Decorative background */}
         <div
-          className="pointer-events-none absolute inset-0"
+          className="pointer-events-none absolute inset-0 opacity-70"
           style={{
             background:
-              'radial-gradient(circle at 20% 20%, rgba(255,255,255,0.20), transparent 45%), radial-gradient(circle at 80% 80%, rgba(168,118,31,0.10), transparent 40%)',
+              'radial-gradient(circle at 15% 15%, rgba(232,200,116,0.14), transparent 45%), radial-gradient(circle at 85% 80%, rgba(201,152,47,0.10), transparent 40%)',
           }}
           aria-hidden="true"
         />
@@ -159,26 +166,25 @@ export default function RSVP() {
             items-center
             rounded-3xl
             border
-            border-white/30
-            bg-white/20
+            border-gold/20
+            bg-cream
             p-10
             text-center
             shadow-[0_20px_50px_-25px_rgba(60,40,10,0.35)]
-            backdrop-blur-sm
           "
         >
           <CheckCircle2
             size={48}
-            className="text-espresso"
+            className="text-gold-deep"
           />
 
-          <h3 className="mt-6 font-display text-2xl text-espresso">
+          <h3 className="mt-6 font-display text-2xl text-ink">
             Merci, {form.fullName.split(' ')[0]} !
           </h3>
 
-          <p className="mt-3 text-espresso/75">
-            Votre confirmation a bien été envoyée. Nous avons hâte de
-            célébrer ce moment avec vous.
+          <p className="mt-3 text-cocoa/80">
+            Votre confirmation a bien été envoyée. Nous avons hâte
+            de célébrer ce moment avec vous.
           </p>
 
           <button
@@ -194,11 +200,11 @@ export default function RSVP() {
               text-xs
               uppercase
               tracking-[0.2em]
-              text-espresso
+              text-gold-deep
               underline
               underline-offset-4
-              transition-opacity
-              hover:opacity-70
+              transition-colors
+              hover:text-gold
             "
           >
             Envoyer une autre réponse
@@ -208,40 +214,40 @@ export default function RSVP() {
     );
   }
 
+  /*
+   * ============================================================
+   * MAIN RSVP
+   * ============================================================
+   */
+
   return (
     <section
       id="rsvp"
-      className="relative overflow-hidden px-6 py-24 sm:px-10"
-      style={{ backgroundColor: '#DCA1A1' }}
+      className="relative overflow-hidden bg-gradient-to-b from-cream-deep to-blush px-6 py-24 sm:px-10"
     >
-      {/* =====================================================
-          DECORATIVE BACKGROUND
-          ===================================================== */}
-
+      {/* Decorative background */}
       <div
-        className="pointer-events-none absolute inset-0"
+        className="pointer-events-none absolute inset-0 opacity-70"
         style={{
           background:
-            'radial-gradient(circle at 15% 15%, rgba(255,255,255,0.20), transparent 45%), radial-gradient(circle at 85% 80%, rgba(168,118,31,0.10), transparent 40%)',
+            'radial-gradient(circle at 15% 15%, rgba(232,200,116,0.14), transparent 45%), radial-gradient(circle at 85% 80%, rgba(201,152,47,0.10), transparent 40%)',
         }}
         aria-hidden="true"
       />
 
-      {/* =====================================================
-          CONTENT
-          ===================================================== */}
-
       <div className="relative mx-auto max-w-md text-center">
 
-        <p className="font-label text-xs uppercase tracking-[0.3em] text-espresso/70">
+        {/* Heading */}
+
+        <p className="font-label text-xs uppercase tracking-[0.3em] text-cocoa/70">
           Confirmez votre présence
         </p>
 
-        <h2 className="mt-3 font-display text-4xl text-espresso">
+        <h2 className="mt-3 font-display text-4xl text-ink">
           RSVP
         </h2>
 
-        <p className="mt-3 font-script text-2xl text-espresso/80">
+        <p className="mt-3 font-script text-2xl text-gold-deep">
           Avant le {couple.rsvpDeadline}
         </p>
 
@@ -264,8 +270,8 @@ export default function RSVP() {
 
                 ${
                   n <= step
-                    ? 'bg-espresso text-[#DCA1A1]'
-                    : 'border border-espresso/30 text-espresso/60'
+                    ? 'gold-gradient-btn text-espresso'
+                    : 'border border-gold/30 text-cocoa/60'
                 }
               `}
             >
@@ -274,9 +280,7 @@ export default function RSVP() {
           ))}
         </div>
 
-        {/* ===================================================
-            FORM
-            =================================================== */}
+        {/* Form */}
 
         <form
           onSubmit={
@@ -291,20 +295,18 @@ export default function RSVP() {
             mt-10
             rounded-3xl
             border
-            border-white/30
-            bg-white/20
+            border-gold/20
+            bg-cream
             p-7
             text-left
             shadow-[0_20px_50px_-25px_rgba(60,40,10,0.35)]
-            backdrop-blur-sm
-
             sm:p-9
           "
         >
 
-          {/* =================================================
+          {/* ====================================================
               STEP 1
-              ================================================= */}
+              ==================================================== */}
 
           {step === 1 && (
             <div className="flex flex-col gap-5">
@@ -344,6 +346,7 @@ export default function RSVP() {
               <button
                 type="submit"
                 className="
+                  gold-gradient-btn
                   mt-3
                   flex
                   w-full
@@ -351,7 +354,6 @@ export default function RSVP() {
                   justify-center
                   gap-2
                   rounded-full
-                  bg-espresso
                   px-6
                   py-3.5
                   font-label
@@ -359,7 +361,7 @@ export default function RSVP() {
                   font-medium
                   uppercase
                   tracking-[0.2em]
-                  text-[#DCA1A1]
+                  text-espresso
                   shadow-lg
                   transition-transform
                   hover:scale-[1.02]
@@ -373,12 +375,14 @@ export default function RSVP() {
             </div>
           )}
 
-          {/* =================================================
+          {/* ====================================================
               STEP 2
-              ================================================= */}
+              ==================================================== */}
 
           {step === 2 && (
             <div className="flex flex-col gap-5">
+
+              {/* Ceremonies */}
 
               <Field
                 label="Cérémonies auxquelles vous assisterez"
@@ -402,8 +406,8 @@ export default function RSVP() {
 
                         ${
                           form.ceremonies.includes(ev.id)
-                            ? 'border-espresso bg-espresso/10'
-                            : 'border-espresso/15 bg-white/10 hover:border-espresso/40'
+                            ? 'border-gold bg-gold/10'
+                            : 'border-cocoa/15 bg-transparent hover:border-gold/40'
                         }
                       `}
                     >
@@ -414,9 +418,9 @@ export default function RSVP() {
                         className="h-4 w-4 accent-[#c9982f]"
                       />
 
-                      <span className="text-sm text-espresso/90">
+                      <span className="text-sm text-cocoa/90">
                         {ev.title}{' '}
-                        <span className="text-espresso/50">
+                        <span className="text-cocoa/50">
                           — {ev.dateLong}
                         </span>
                       </span>
@@ -426,7 +430,7 @@ export default function RSVP() {
                 </div>
               </Field>
 
-              {/* Pagne */}
+              {/* Traditional ceremony / Pagne */}
 
               {form.ceremonies.includes('traditionnel') && (
                 <Field
@@ -434,7 +438,7 @@ export default function RSVP() {
                   icon={Shirt}
                   error={fieldErrors.wantsPagne}
                 >
-                  <p className="mb-2.5 text-xs text-espresso/60">
+                  <p className="mb-2.5 text-xs text-cocoa/60">
                     Un pagne assorti sera disponible pour la cérémonie
                     traditionnelle.
                   </p>
@@ -467,8 +471,8 @@ export default function RSVP() {
 
                           ${
                             form.wantsPagne === opt.value
-                              ? 'border-espresso bg-espresso/10 text-espresso'
-                              : 'border-espresso/15 text-espresso/80 hover:border-espresso/40'
+                              ? 'border-gold bg-gold/10 text-ink'
+                              : 'border-cocoa/15 text-cocoa/80 hover:border-gold/40'
                           }
                         `}
                       >
@@ -480,7 +484,7 @@ export default function RSVP() {
                 </Field>
               )}
 
-              {/* Guests */}
+              {/* Number of guests */}
 
               <Field
                 label="Nombre d'invités (vous inclus)"
@@ -524,7 +528,7 @@ export default function RSVP() {
               {/* Error */}
 
               {status === 'error' && (
-                <p className="rounded-xl border border-red-600/30 bg-red-600/10 px-4 py-3 text-sm text-red-800">
+                <p className="rounded-xl border border-red-400/30 bg-red-400/10 px-4 py-3 text-sm text-red-700">
                   {errorMsg}
                 </p>
               )}
@@ -544,17 +548,17 @@ export default function RSVP() {
                     gap-2
                     rounded-full
                     border
-                    border-espresso/20
+                    border-cocoa/20
                     px-6
                     py-3.5
                     font-label
                     text-xs
                     uppercase
                     tracking-[0.2em]
-                    text-espresso/80
+                    text-cocoa/80
                     transition-colors
-                    hover:border-espresso/50
-                    hover:text-espresso
+                    hover:border-gold/50
+                    hover:text-cocoa
                   "
                 >
                   <ArrowLeft size={16} />
@@ -565,13 +569,13 @@ export default function RSVP() {
                   type="submit"
                   disabled={status === 'loading'}
                   className="
+                    gold-gradient-btn
                     flex
                     flex-1
                     items-center
                     justify-center
                     gap-2
                     rounded-full
-                    bg-espresso
                     px-6
                     py-3.5
                     font-label
@@ -579,7 +583,7 @@ export default function RSVP() {
                     font-medium
                     uppercase
                     tracking-[0.2em]
-                    text-[#DCA1A1]
+                    text-espresso
                     shadow-lg
                     transition-transform
                     hover:scale-[1.02]
@@ -604,17 +608,22 @@ export default function RSVP() {
 
             </div>
           )}
-
         </form>
       </div>
     </section>
   );
 }
 
+/*
+ * ==============================================================
+ * FIELD COMPONENT
+ * ==============================================================
+ */
+
 function Field({ label, icon: Icon, error, children }) {
   return (
     <div>
-      <label className="mb-2 flex items-center gap-2 font-label text-[11px] uppercase tracking-[0.2em] text-espresso/65">
+      <label className="mb-2 flex items-center gap-2 font-label text-[11px] uppercase tracking-[0.2em] text-cocoa/65">
         {Icon && <Icon size={13} />}
         {label}
       </label>
@@ -622,7 +631,7 @@ function Field({ label, icon: Icon, error, children }) {
       {children}
 
       {error && (
-        <p className="mt-1.5 text-xs text-red-700">
+        <p className="mt-1.5 text-xs text-red-600">
           {error}
         </p>
       )}
@@ -630,26 +639,32 @@ function Field({ label, icon: Icon, error, children }) {
   );
 }
 
+/*
+ * ==============================================================
+ * INPUT STYLING
+ * ==============================================================
+ */
+
 function inputClasses(error) {
   return `
     w-full
     rounded-xl
     border
-    bg-white/20
+    bg-cream-deep/30
     px-4
     py-3
     text-[15px]
-    text-espresso
-    placeholder:text-espresso/35
+    text-ink
+    placeholder:text-cocoa/35
     outline-none
     transition-colors
-    focus:border-espresso
-    focus:bg-white/30
+    focus:border-gold
+    focus:bg-cream-deep/50
 
     ${
       error
-        ? 'border-red-600/60'
-        : 'border-espresso/15'
+        ? 'border-red-400/60'
+        : 'border-cocoa/15'
     }
   `;
 }

@@ -35,38 +35,30 @@ export default function Countdown() {
   }, []);
 
   return (
-    <section
-      className="relative overflow-hidden px-6 py-24 sm:px-10"
-      style={{ backgroundColor: '#DCA1A1' }}
-    >
+    <section className="relative overflow-hidden bg-gradient-to-b from-cream-deep to-blush px-6 py-24 sm:px-10">
       {/* Decorative background glow */}
       <div
         className="pointer-events-none absolute inset-0 opacity-70"
         style={{
           background:
-            'radial-gradient(circle at 20% 20%, rgba(255,255,255,0.22), transparent 45%), radial-gradient(circle at 80% 70%, rgba(168,118,31,0.12), transparent 40%)',
+            'radial-gradient(circle at 20% 20%, rgba(232,200,116,0.14), transparent 45%), radial-gradient(circle at 80% 70%, rgba(201,152,47,0.10), transparent 40%)',
         }}
         aria-hidden="true"
       />
 
       <div className="relative mx-auto flex max-w-3xl flex-col items-center text-center">
-
-        {/* Eyebrow */}
-        <p className="font-label text-xs uppercase tracking-[0.3em] text-espresso/70">
+        <p className="font-label text-xs uppercase tracking-[0.3em] text-cocoa/70">
           Plus que...
         </p>
 
-        {/* Title */}
-        <h2 className="mt-3 font-display text-4xl text-espresso sm:text-5xl">
+        <h2 className="mt-3 font-display text-4xl text-ink sm:text-5xl">
           Compte à Rebours
         </h2>
 
-        {/* Date */}
-        <p className="mt-3 font-script text-3xl text-espresso/80 sm:text-4xl">
+        <p className="mt-3 font-script text-3xl text-gold-deep sm:text-4xl">
           {couple.dateRange.split('&')[0].trim()} Décembre 2026
         </p>
 
-        {/* Countdown */}
         <div className="mt-14 grid w-full grid-cols-4 gap-3 sm:gap-6">
           {UNITS.map((unit) => (
             <div
@@ -77,27 +69,24 @@ export default function Countdown() {
                 items-center
                 rounded-2xl
                 border
-                border-white/30
-                bg-white/20
+                border-gold/25
+                bg-cream
                 px-2
                 py-5
-                shadow-[0_15px_35px_-15px_rgba(60,40,10,0.25)]
-                backdrop-blur-sm
-
+                shadow-[0_15px_35px_-15px_rgba(60,40,10,0.35)]
                 sm:py-7
               "
             >
-              <span className="font-display text-3xl text-espresso tabular-nums sm:text-5xl">
+              <span className="font-display text-3xl text-gold-deep tabular-nums sm:text-5xl">
                 {String(time[unit.key]).padStart(2, '0')}
               </span>
 
-              <span className="mt-2 font-label text-[10px] uppercase tracking-[0.2em] text-espresso/70 sm:text-xs">
+              <span className="mt-2 font-label text-[10px] uppercase tracking-[0.2em] text-cocoa/70 sm:text-xs">
                 {unit.label}
               </span>
             </div>
           ))}
         </div>
-
       </div>
     </section>
   );
