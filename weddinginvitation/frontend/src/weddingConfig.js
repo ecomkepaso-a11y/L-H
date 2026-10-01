@@ -80,7 +80,7 @@ export const story = [
   {
     title: 'Le Grand Jour',
     text: "Aujourd'hui, nous écrivons le premier chapitre de notre vie à deux.",
-    image: '/images/gallery/couple-new-04.jpg',
+    image: '/images/gallery/couple-17.jpg',
   },
 ];
 
